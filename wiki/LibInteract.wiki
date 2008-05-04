@@ -1,10 +1,10 @@
-#summary One-sentence summary of this page.
+#summary Lib Interact for AVR (see Dataflow wiki)
 
 = Lib Interact for AVR =
 
 This is a good place to store some libraries for Atmel microcontrollers.  
 
-= RoadMap =
+= Road Map =
   * An automagic Makefile
   * Some tools to make *colors* and _sounds_
 
