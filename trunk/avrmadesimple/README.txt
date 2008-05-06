@@ -21,7 +21,7 @@ CONFIGURATION
 For the parts list : 
 http://www.nongnu.org/avrdude/user-manual/avrdude_4.html
 
-MICROCONTROLLER = atmega8515
+MICROCONTROLLER = atmega8
 SERIALPORT = /dev/cu.USA19H1a2P1.1
 OPTIMIZE = -O0
 PROGRAMMER = stk500v2
