@@ -1,6 +1,53 @@
 // for atmega8L
 // from http://www.scienceprog.com/generate-sine-wave-modulated-pwm-with-avr-microcontroller/
 
+// ATMEL ATMEGA8
+//
+//       +-\/-+
+// PC6  1|    |28  PC5
+// PD0  2|    |27  PC4	
+// PD1  3|    |26  PC3
+// PD2  4|    |25  PC2
+// PD3  5|    |24  PC1
+// PD4  6|    |23  PC0
+// VCC  7|    |22  GND
+// GND  8|    |21  AREF
+// PB6  9|    |20  AVCC
+// PB7 10|    |19  PB5
+// PD5 11|    |18  PB4
+// PD6 12|    |17  PB3
+// PD7 13|    |16  PB2
+// PB0 14|    |15  PB1
+//       +----+
+
+
+
+// On the Arduino board, digital pins are also used
+// for the analog output (software PWM).  Analog input
+// pins are a separate set.
+
+// ATMEL ATMEGA8 & 168 / ARDUINO
+//
+//                  +-\/-+
+//            PC6  1|    |28  PC5 (AI 5)
+//      (D 0) PD0  2|    |27  PC4 (AI 4)
+//      (D 1) PD1  3|    |26  PC3 (AI 3)
+//      (D 2) PD2  4|    |25  PC2 (AI 2)
+// PWM+ (D 3) PD3  5|    |24  PC1 (AI 1)
+//      (D 4) PD4  6|    |23  PC0 (AI 0)
+//            VCC  7|    |22  GND
+//            GND  8|    |21  AREF
+//            PB6  9|    |20  AVCC
+//            PB7 10|    |19  PB5 (D 13)
+// PWM+ (D 5) PD5 11|    |18  PB4 (D 12)
+// PWM+ (D 6) PD6 12|    |17  PB3 (D 11) PWM
+//      (D 7) PD7 13|    |16  PB2 (D 10) PWM
+//      (D 8) PB0 14|    |15  PB1 (D 9) PWM
+//                  +----+
+//
+// (PWM+ indicates the additional PWM pins on the ATmega168.)
+
+
 #include <avr/io.h>
 #include <avr/interrupt.h>
 #include <avr/pgmspace.h>
@@ -30,31 +77,51 @@ uint8_t i = 0; // can only have values within [0,255]
 // interrupt
 ISR(TIMER1_COMPA_vect) 
 {
+	//Altering the value of the Output Compare Registers (OCR) changes the duty cycle. 
+	//Increasing the OCR value increases the duty cycle. The PWM output is high until the 
+	//OCR value is reached, and low until the timer reaches the top value and wraps back to 
+	//0. This is called Fast-PWM mode.
 	OCR1A = pgm_read_byte(&sinewave[i]); // set PWM to value
 	i++;
 }
 
 int main(void) 
 {
+	// INPUT
 	//Port D pins as input
 	DDRD=0x00;
 	//Enable internal pull ups
 	PORTD=0xFF;
 	
-	
-	
-	
+	// PWM
 	//Set PORTB1 pin as output
 	DDRB=0x02;//0xFF;
 	
-	//initial OCR1A value
-	OCR1A=80;
+	//initial OCR1A value (Pulse Width)
+	OCR1A=80; // PULSE WIDTH ([0x00,0xFF])
+	
+	//In the AVR, the timer/counters are used to generate PWM signals. To change the PWM 
+	//base frequency, the timer clock frequency and top counter value is changed. Faster 
+	//clock and/or lower top value will increase the PWM base frequency, or timer overflow 
+	//frequency. With full resolution (top value 255) the maximum PWM base frequency is 
+	//250 kHz. Increasing the base frequency beyond this frequency will be at the expense of 
+	//reduced resolution, since fewer step are then available from 0% to 100% duty cycle. 
+	
+	//16 bit timer counter maximum value may reach 65535. In AVR microcontrollers 16 bit timer
+	//is Timer1. It contains a 16 bit input capture register (ICR1) and two 16 bit output 
+	//compare registers (OCR1A and OCR1B).
+	
 	//Output compare OC1A 8 bit non inverted PWM
 	TCCR1A=0x91;
 	//start timer without prescaler
 	TCCR1B=0x01;
 	//enable output compare interrupt for OCR1A
 	TIMSK=0x10;
+	
+	//Few words about prescaler. As timer counter is a binary counter it has a prescaler like 
+	//other timers in AVR microcontrollers. Prescaler may be selected in TCCR1B with bits 
+	//CS12, CS11 and CS10 like in 8 bit timers.
+	
 	
 	//enable global interrups
 	sei();
