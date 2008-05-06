@@ -5,6 +5,8 @@ MICROCONTROLLER = atmega8
 SERIALPORT = /dev/cu.USA19H1a2P1.1
 OPTIMIZE = -O2
 PROGRAMMER = stk500v2
+#MOREFUSES = -U hfuse:w:0xd9:m -U lfuse:w:0x24:m
+MOREFUSES = 
 
 # Processor frequency.
 #     This will define a symbol, CPUFREQ, in all source code files equal to the
@@ -18,14 +20,15 @@ PROGRAMMER = stk500v2
 # CPUFREQ =  3686400
 # CPUFREQ =  4000000
 # CPUFREQ =  7372800
-# CPUFREQ =  8000000
+#CPUFREQ =  8000000
 # CPUFREQ = 11059200
 # CPUFREQ = 14745600
 # CPUFREQ = 16000000
 # CPUFREQ = 18432000
 # CPUFREQ = 20000000
 # CPUFREQ = 10000000 
-CPUFREQ    = 3686400
+CPUFREQ    = 3686400   
+#(default for stk500)
 
 # ===========================================
 # default target when "make" is run w/o arguments
@@ -45,7 +48,7 @@ main.rom: main.elf
 
 # command to program chip (invoked by running "make install")
 install:
-	avrdude -p ${MICROCONTROLLER} -c ${PROGRAMMER} -P ${SERIALPORT} -e -U flash:w:main.rom
+	avrdude -p ${MICROCONTROLLER} -c ${PROGRAMMER} -P ${SERIALPORT} -e -U flash:w:main.rom ${MOREFUSES}
 
 # command to clean up junk (no source files) (invoked by "make clean")
 clean:
