@@ -1,8 +1,14 @@
 From time to time, we release ZIP files which contains a part of 
 the LibInteract for AVR/Arduino. 
 
-cp -R foo foo_01
-find foo_01 -name .svn | xargs rm -rf 
-zip -r foo_01.zip foo_01
+Below is some code to do it.
+---------------------------------------
 
+ORIG=foo
+ARCHIV=foo_01
+
+cp -R $ORG $ARCHIV
+find $ARCHIV -name .svn | xargs rm -rf 
+find $ARCHIV -name .DS_STORE | xargs rm -rf
+zip -r $ARCHIV.zip $ARCHIV
 
