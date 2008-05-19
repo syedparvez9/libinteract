@@ -1,3 +1,6 @@
+See each subdirectory for informations on each subproject of
+the LibInteract library for Arduino/AVR.
+
 From time to time, we release ZIP files which contains a part of 
 the LibInteract for AVR/Arduino. 
 
