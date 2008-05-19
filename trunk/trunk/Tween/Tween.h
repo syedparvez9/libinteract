@@ -1,3 +1,6 @@
+#ifndef TWEEN_H
+#define TWEEN_H
+
 #define TWEEN_LINEAR 0
 #define TWEEN_EASEINOUTCUBIC  1 
 // todo add more tweentypes
@@ -21,3 +24,6 @@ float Tween_linearTween(Tween_t *me, float t);
 void  Tween_line(Tween_t *me, float val, float duration);
 void  Tween_setType(Tween_t *me, int newtype);
 float Tween_easeInOutCubic(Tween_t *me, float t);
+
+#endif
+
