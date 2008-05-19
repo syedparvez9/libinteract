@@ -14,7 +14,7 @@ float Tween_linearTween(Tween_t *me, float t)
 void Tween_line(Tween_t *me, float val, float duration) 
 {
 	me->b = me->v; // beginning = current
-	me->c = val - me->v; // count = 
+	me->c = val - me->v; // change in value = target - current
 	me->d = duration;
 }
 
@@ -28,7 +28,7 @@ void Tween_init(Tween_t *me)
 float Tween_tick(Tween_t *me, float t) 
 {
 	float ret = 0;
-	// if done
+	// if done ( >  duration)
 	if (t > me->d)
 	{
 		ret = me->b + me->c; // arrived
@@ -47,6 +47,7 @@ float Tween_tick(Tween_t *me, float t)
 				break;
 		}
 	}
+	me->v = ret; // IMPORTANT
 	return ret;
 }
 void Tween_setType(Tween_t *me, int newtype) 
@@ -66,7 +67,8 @@ void Tween_setType(Tween_t *me, int newtype)
 }
 
 // cubic easing in/out - acceleration until halfway, then deceleration
-float Tween_easeInOutCubic(Tween_t *me, float t) {
+float Tween_easeInOutCubic(Tween_t *me, float t) 
+{
 	if ((t /= me->d/2) < 1) 
 	{ 
 		return me->c/2*t*t*t + me->b;
