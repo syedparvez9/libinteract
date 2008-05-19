@@ -1,23 +1,12 @@
-
-/*
-typedef struct 
-{
-  unsigned long ms_start;
-  Tween_t *t;
-} Line_t;
-
-float Line_tick(Line_t *x, unsigned long ms_now);
-void Line_tick(Line_t *x, unsigned long ms_now);
-*/
-
 /** 
  16 PWM outputs with the TLC5940
- Using the SMS protocol
- p d [pin] [value] -> write PWM pin. (indices [0,n-1] | n = 16)
+ Using the SMS protocol and the Tween library
+ r [pin] [value] [duration] -> write PWM pin. (indices [0,n-1] | n = 16), time in ms
  @author Alexandre Quessy 
  @date 2008 May
  @uses https://whatever.metalab.at/user/wizard23/tlc5940/arduino/TLC5940/ 
  @see http://www.arduino.cc/cgi-bin/yabb2/YaBB.pl?num=1204292903/6
+ @uses http://www.arduino.cc/playground/Code/SimpleMessageSystem
  */
 // --------------------------
 // >> Extract from TLC5940.cpp:
@@ -115,5 +104,17 @@ void sms_ramp()
   Tween_line(&chase[pin], (float) target/255.0, (float) duration);
   ms_start[pin] = millis();
 }
+
+/*
+TODO:
+typedef struct 
+{
+  unsigned long ms_start;
+  Tween_t *t;
+} Line_t;
+
+float Line_tick(Line_t *x, unsigned long ms_now);
+void Line_tick(Line_t *x, unsigned long ms_now);
+*/
 
 
