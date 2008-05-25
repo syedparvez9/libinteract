@@ -38,11 +38,12 @@ float Tween_tick(Tween_t *me, float t)
 		switch (me->tweentype)
 		{
 			// call appropriate tween function
-			default:
 			case TWEEN_EASEINOUTCUBIC:
 				ret = Tween_easeInOutCubic(me,t);
 				break;
+			// default
 			case TWEEN_LINEAR:
+			default:
 				ret = Tween_linearTween(me, t); 
 				break;
 		}
