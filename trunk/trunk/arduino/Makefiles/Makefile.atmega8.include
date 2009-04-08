@@ -1,0 +1,11 @@
+# Defaults for Arduino ATmega8
+# Int. RC Osc. 4 MHz; Start-up time: 6 CK + 4 ms; [CKSEL=0011 SUT=01]
+# Brown-out detection 2.7V
+# SPI enabled
+LFUSES=0x94
+HFUSES=0xD9
+AVRDUDE_FUSES=-U lfuse:w:$(LFUSES):m -U hfuse:w:$(HFUSES):m
+
+F_CPU = 8000000
+#
+# F_CPU = 16000000
