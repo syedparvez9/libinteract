@@ -15,5 +15,5 @@ Here were mine:
  * Tool classes to cope for Arduino's lacks: Timer.h, Random.h, PseudoAnalogWrite.h, analog_reference.h, general.h, prescaler.h, printFloat.h
  * Utility classes for Arduino: oscilloscope.h
  * Sensor classes for Arduino: TouchSensor.h/VoltageMeter.h
- * Statistics/data classes: avr/math/*.h
+ * Statistics/data classes: avr/math/`*`.h
  * Software reset (don't know how to categorize this): avr/softreset.h
