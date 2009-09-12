@@ -54,7 +54,7 @@ void setAnalogReference(byte mode) {
   // XXX I don't know why but without these lines the switch from 
   // DEFAULT to INTERNAL does not work well.
   analogRead(ANALOG_REFERENCE_DUMMY_PIN);
-  trueDelay(100); // wait for 10 ms
+  trueDelay(100); // wait for 100 ms
 }
 
 /**
