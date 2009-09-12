@@ -40,9 +40,9 @@
 #define CLOCK_PRESCALER_256 (0x8)
 
 // Initialize global variable.
-uint8_t __clock_prescaler = (CLKPR & (_BV(CLKPS0) | _BV(CLKPS1) | _BV(CLKPS2) | _BV(CLKPS3)));
+static uint8_t __clock_prescaler = (CLKPR & (_BV(CLKPS0) | _BV(CLKPS1) | _BV(CLKPS2) | _BV(CLKPS3)));
 
-void setClockPrescaler(uint8_t clockPrescaler) {
+inline void setClockPrescaler(uint8_t clockPrescaler) {
   if (clockPrescaler <= CLOCK_PRESCALER_256) {
     // Disable interrupts.
     uint8_t oldSREG = SREG;
@@ -62,11 +62,11 @@ void setClockPrescaler(uint8_t clockPrescaler) {
   }
 }
 
-uint8_t getClockPrescaler() {
+inline uint8_t getClockPrescaler() {
   return (__clock_prescaler);
 }
 
-uint16_t getClockDivisionFactor() {
+inline uint16_t getClockDivisionFactor() {
   return ((uint16_t)(1 << __clock_prescaler));
 }
 
@@ -79,14 +79,14 @@ uint16_t getClockDivisionFactor() {
  * course of computation. Remember that you can reset the overflow counter by calling the
  * init() function from wiring.h.
  */
-unsigned long trueMillis()
+inline unsigned long trueMillis()
 {
   return millis() * getClockDivisionFactor();
 }
 
 // Waits for #ms# milliseconds.
 // NOTE: Please see comment above.
-void trueDelay(unsigned long ms)
+inline void trueDelay(unsigned long ms)
 {
   unsigned long start = trueMillis();
   while (trueMillis() - start < ms);
@@ -98,7 +98,7 @@ void trueDelay(unsigned long ms)
  * Example use:
  * delay( rescaleDelay(1000) ); // equivalent to wait(1000)
  */
-unsigned long rescaleDuration(unsigned long d) {
+inline unsigned long rescaleDuration(unsigned long d) {
   return (d / getClockDivisionFactor());
 }
 
@@ -106,7 +106,7 @@ unsigned long rescaleDuration(unsigned long d) {
  * Rescales given time (in milliseconds or microseconds) according to division factor. Should
  * be called 
  */
-unsigned long rescaleTime(unsigned long t) {
+inline unsigned long rescaleTime(unsigned long t) {
   return (t * getClockDivisionFactor());
 }
 
