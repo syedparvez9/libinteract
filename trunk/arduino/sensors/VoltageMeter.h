@@ -31,7 +31,7 @@ Circuit schematics
 ------------------
 
             R1             R2
-  Vin ----/\/\/\----*----/\/\/\---- GND
+  GND ----/\/\/\----*----/\/\/\---- Vin
                     |
                     | Vout
                     |
@@ -97,7 +97,7 @@ public:
   }
   
   float voltage(int nSamples = 1) const {
-    return analogReadVoltage(nSamples) / 1023.0f * _vMax;
+    return ((float)analogReadVoltage(nSamples)) / 1023.0f * _vMax;
   }
 };
 
