@@ -25,53 +25,14 @@
 #define PRESCALER_INC
 
 #include "WProgram.h"
-
-/**
- * Prescaler division 
-*/
-#define CLOCK_PRESCALER_1   (0x0)
-#define CLOCK_PRESCALER_2   (0x1)
-#define CLOCK_PRESCALER_4   (0x2)
-#define CLOCK_PRESCALER_8   (0x3)
-#define CLOCK_PRESCALER_16  (0x4)
-#define CLOCK_PRESCALER_32  (0x5)
-#define CLOCK_PRESCALER_64  (0x6)
-#define CLOCK_PRESCALER_128 (0x7)
-#define CLOCK_PRESCALER_256 (0x8)
-
-// Initialize global variable.
-static uint8_t __clock_prescaler = (CLKPR & (_BV(CLKPS0) | _BV(CLKPS1) | _BV(CLKPS2) | _BV(CLKPS3)));
-
-inline void setClockPrescaler(uint8_t clockPrescaler) {
-  if (clockPrescaler <= CLOCK_PRESCALER_256) {
-    // Disable interrupts.
-    uint8_t oldSREG = SREG;
-    cli();
-    
-    // Enable change.
-    CLKPR = _BV(CLKPCE); // write the CLKPCE bit to one and all the other to zero
-    
-    // Change clock division.
-    CLKPR = clockPrescaler; // write the CLKPS0..3 bits while writing the CLKPE bit to zero
-    
-    // Copy for fast access.
-    __clock_prescaler = clockPrescaler;
-    
-    // Recopy interrupt register.
-    SREG = oldSREG;
-  }
-}
-
-inline uint8_t getClockPrescaler() {
-  return (__clock_prescaler);
-}
+#include <avr/power.h>
 
 inline uint16_t getClockDivisionFactor() {
-  return ((uint16_t)(1 << __clock_prescaler));
+  return ((uint16_t)(1 << clock_prescale_get()));
 }
 
 /**
- * Time in milliseconds.
+ * Time in milliseconds. Actually uses the micros() function to achieve better resolution.
  *
  * NOTE: This is the equivalent of the millis() function but it readjusts it according
  * to the current clock division. As such, be careful of how you make use of it, in
@@ -81,7 +42,21 @@ inline uint16_t getClockDivisionFactor() {
  */
 inline unsigned long trueMillis()
 {
-  return millis() * getClockDivisionFactor();
+  uint16_t cdf = getClockDivisionFactor();
+  // Same same.
+  if (cdf == 1)
+    return millis();
+  // Don't use micros() if we're going to break the micros() resolution anyway.
+  // See: http://www.arduino.cc/en/Reference/Micros
+#if F_CPU >= 16000000L
+  else if (cdf <= 4)
+#else
+  else if (cdf <= 8)
+#endif
+    return millis() * cdf;
+  // Otherwise, use micros() instead of millis() as they will give more precision.
+  else
+    return  ( (uint32_t) (micros() * cdf) ) / 1000;
 }
 
 // Waits for #ms# milliseconds.
@@ -93,8 +68,8 @@ inline void trueDelay(unsigned long ms)
 }
 
 /**
- * Rescales given delay time according to division factor. Should be called before a call 
- * to delay(). Insures compatibility with function using delay().
+ * Rescales given delay time (in milliseconds or microseconds) according to division factor. 
+ * Should be called before a call to delay(). Insures compatibility with function using delay().
  * Example use:
  * delay( rescaleDelay(1000) ); // equivalent to wait(1000)
  */
