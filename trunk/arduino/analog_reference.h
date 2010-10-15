@@ -58,13 +58,35 @@ void setAnalogReference(byte mode) {
 }
 
 /**
- * Returns the analog value at #pin# by using the analog reference mode
- * specified by #mode#. Switches back to original mode after.
+ * Returns the analog value at #pin# by using the analog reference mode specified
+ * by #mode#. Switches back to original mode after.
+ * Optional argument #nSamples# allows to ask for an average value over many samples.
+ * Optional argument #timeBetweenSamples# allows to set a delay (in milliseconds) between each reading.
  */
-int analogReadReference(byte pin, byte mode) {
+int analogReadReference(byte pin, byte mode, int nSamples = 1, unsigned long timeBetweenSamples = 0) {
+
   uint8_t currentReference = getAnalogReference(); // copy current reference
-  setAnalogReference(mode);               // safely switch to new reference
-  int value = analogRead(pin);            // read value
+  setAnalogReference(mode);                        // safely switch to new reference
+
+  int value;
+
+  if (nSamples == 1)
+    value = analogRead(pin);
+
+  else {
+    unsigned long sum = 0;
+    if (timeBetweenSamples > 0)
+      for (int i=0; i<nSamples; i++) {
+        sum += analogRead(pin);
+        delay(timeBetweenSamples);
+      }
+    else
+      for (int i=0; i<nSamples; i++)
+        sum += analogRead(pin);
+
+    value = (int) (sum / nSamples);
+  }
+
   setAnalogReference(currentReference);   // switch back to original reference
 
   return (value);
