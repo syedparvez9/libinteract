@@ -24,7 +24,7 @@
 #ifndef AVAILABLE_MEMORY_INC
 #define AVAILABLE_MEMORY_INC
 
-#include <cstdlib.h>
+#include <stdlib.h>
 
 // this function will return the number of bytes currently free in RAM
 size_t availableMemory() {
@@ -38,4 +38,4 @@ size_t availableMemory() {
   return size;
 }
 
-
+#endif
