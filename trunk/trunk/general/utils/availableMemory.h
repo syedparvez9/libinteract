@@ -29,8 +29,8 @@
 // this function will return the number of bytes currently free in RAM
 size_t availableMemory() {
   unsigned char *buf;
-  size_t size = 0;
-  while ( (buf = (unsigned char*) malloc(size)) != NULL) {
+  int size = 0;
+  while ( (buf = (unsigned char*) malloc(size * sizeof(unsigned char))) != NULL) {
     size++;
     free(buf);
   }

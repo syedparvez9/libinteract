@@ -11,7 +11,7 @@ int MyFileEEPROM::read(void *ptr, int blockSize, int nBlocks) {
 }
 
 // Write.
-int MyFileEEPROM::write(void *ptr, int blockSize, int nBlocks) {
+int MyFileEEPROM::write(const void *ptr, int blockSize, int nBlocks) {
   nBlocks *= blockSize; // nBlocks becomes total memory (saves one int)
   if (pos + nBlocks > EEPROM_SIZE)
     return 0; // TODO: rendre compliant avec fread
