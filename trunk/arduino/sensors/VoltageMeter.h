@@ -88,7 +88,11 @@ public:
   
   int analogReadVoltage(int nSamples = 1) const {
     byte currentReference = getAnalogReference();
+#if defined(__AVR_ATmega1280__)
+    setAnalogReference(INTERNAL1V1);
+#else
     setAnalogReference(INTERNAL);
+#endif
     float sum = 0;
     for (int i=0; i< nSamples; i++)
       sum += analogRead(_pin);

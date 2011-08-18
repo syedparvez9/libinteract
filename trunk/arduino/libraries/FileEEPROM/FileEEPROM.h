@@ -45,7 +45,7 @@ public:
   int read(void *ptr, int blockSize = 1, int nBlocks = 1);
   
   // Write.
-  int write(void *ptr, int blockSize = 1, int nBlocks = 1);
+  int write(const void *ptr, int blockSize = 1, int nBlocks = 1);
   int eof();
   int seek(int offset/*, int whence*/);
   
