@@ -28,6 +28,7 @@
 #include <EEPROM.h>
 
 // TODO: recoder directement avec eeprom.h eg. eeprom_read_word et eeprom_read_block
+
 #ifndef EEPROM_SIZE
 #if defined(__AVR_ATmega8__) || defined(__AVR_ATmega168__)
 #define EEPROM_SIZE 512
@@ -40,62 +41,17 @@
 #endif
 #endif
 
-// Tout ce qui est ici pourrait simplement être statique.
-class EasyEEPROMLib {
-
-  unsigned int currentIdx;
-  
-  public:
-  EasyEEPROMLib() {
-    reset();
-  }
-  
-  void reset() {
-    currentIdx = 0;
-  }
-  
-  unsigned int malloc(size_t s) {
-    if (currentIdx + s > EEPROM_SIZE)
-      return (-1); // null
-    unsigned int tmp = currentIdx;
-    currentIdx += s;
-    return tmp;
-  }
-  
-  size_t allocated() {
-    return (size_t) currentIndex;
-  }
-
-  size_t available() {
-    return (size_t) (EEPROM_SIZE - currentIndex);
-  }
-  
-};
-
-EasyEEPROMLib EasyEEPROMAllocator;
 class EasyEEPROM {
+  
+  static unsigned int currentIdx;
   
   unsigned int _idx;
   size_t _sizeOfItem;
   size_t _length; // number of items
   
 public:
-  EasyEEPROM() : _idx(-1), _sizeOfItem(0), _length(0) {} // dummy
-
-  // NOTE: J'ai enleve pcq si on initialise hors de setup() (donc en construction) ca n'appele pas allocate() toujours au bon moment...
-  /*  EasyEEPROM(size_t sizeOfItem, size_t nItems = 1) {
-    allocate(sizeOfItem, nItems);
-  }
-  */
-  
-  bool allocate(size_t sizeOfItem, size_t nItems = 1) {
-    if (!isNull())
-      return false;
-    _idx = EasyEEPROMAllocator.malloc(sizeOfItem * nItems);
-    _sizeOfItem = sizeOfItem;
-    _length = nItems;
-    return true;
-  }
+  EasyEEPROM();
+  bool allocate(size_t sizeOfItem, size_t nItems = 1);
   
   bool isNull() const { return (_idx == -1); }
   bool isArray() const { return (_length > 1); }
@@ -104,60 +60,24 @@ public:
   size_t length() const { return _length; }
   size_t size() const { return _length * _sizeOfItem; }
   
-  bool read(void *ptr) {
-    if (isNull())
-      return false;
-    
-    int endIdx = _idx + _sizeOfItem * _length;
-    
-    unsigned char *bptr = (unsigned char*)ptr;
-    for (int i = _idx; i < endIdx; i++)
-      *bptr++ = EEPROM.read(i);
-    
-    return true;
-  }
+  bool read(void *ptr);
   
-  bool readAt(int index, void *ptr) {
-    if (isNull() || index >= _length)
-      return false;
-    
-    int startIdx =_idx + (index*_sizeOfItem);
-    int endIdx = startIdx + _sizeOfItem;
+  bool readAt(int index, void *ptr);
+  
+  bool write(const void *ptr);
+  
+  bool writeAt(int index, const void *ptr);
+  
+  static size_t allocated() {
+    return (size_t) currentIdx;
+  }
 
-    unsigned char *bptr = (unsigned char*)ptr;
-    for (int i = startIdx; i < endIdx; i++)
-      *bptr++ = EEPROM.read(i);
-      
-    return true;
+  static size_t available() {
+    return (size_t) (EEPROM_SIZE - currentIdx);
   }
   
-  bool write(const void *ptr) {
-    if (isNull())
-      return false;
-    
-    int endIdx = _idx + _sizeOfItem * _length;
-    
-    unsigned char *bptr = (unsigned char*)ptr;
-    for (int i = _idx; i < endIdx; i++)
-      EEPROM.write(i, *bptr++);
-    
-    return true;
-  }
-  
-  bool writeAt(int index, const void *ptr) {
-    if (isNull() || index >= _length)
-      return false;
-    
-    int startIdx = _idx + (index*_sizeOfItem);
-    int endIdx = startIdx + _sizeOfItem;
-
-    unsigned char *bptr = (unsigned char*)ptr;
-    for (int i = startIdx; i < endIdx; i++)
-      EEPROM.write(i, *bptr++);
-      
-    return true;
-  }
-  
+protected:
+  unsigned int _allocate(size_t s);
 /*
   void writeAt(int index, byte v) {
     writeAt(index, &v);
