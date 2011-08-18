@@ -41,7 +41,7 @@
 //****************************************************************
 // 0=16ms, 1=32ms,2=64ms,3=128ms,4=250ms,5=500ms
 // 6=1 sec,7=2 sec, 8=4 sec, 9= 8sec
-void setupWatchDog(int ii) {
+void setupWatchdog(int ii) {
 
   byte bb;
   int ww;
