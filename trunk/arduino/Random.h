@@ -29,6 +29,8 @@
 #include <limits.h>
 #include <stdlib.h>
 
+#include "WProgram.h"
+
 class Random {
 
 public:
