@@ -1,0 +1,35 @@
+# Defaults for Arduino ATmega168
+# Int. RC Osc. 8 MHz; Start-up time PWRDWN/RESET: 6 CK/14 CK + 65 ms;  [CKSEL=0010 SUT=10]; default value
+# Brown-out detection disabled
+# SPI enabled
+
+# Internal clock +divide clock by 8
+#LFUSES=0x62
+
+# Use internal clock
+LFUSES=0xE2
+
+# 16 MHz external osc
+#LFUSES=0xFF
+
+# BASIC LFUSES
+
+# Brown-out 1.8V
+HFUSES=0xDE
+# Brown-out 2.7V
+#HFUSES=0xDD
+# Brown-out 4.3V
+#HFUSES=0xDC 
+
+# BASIC HFUSES (brown-out disabled)
+# HFUSES=0xDF
+
+# BASIC EFUSES
+# EFUSES=0xF9
+EFUSES=0xF8
+
+AVRDUDE_FUSES=-U lfuse:w:$(LFUSES):m -U hfuse:w:$(HFUSES):m -U efuse:w:$(EFUSES):m
+
+#F_CPU = 8000000
+
+F_CPU = 16000000
