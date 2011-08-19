@@ -81,6 +81,8 @@ int ATD45DB161DStream::read() {
 }
 
 int ATD45DB161DStream::peek() {
+  if (eof())
+    return (-1);
   flushOutput();
   ReadMainMemoryPage(currentPage(), currentOffset());
   return SPI.transfer(0xff);
@@ -92,7 +94,7 @@ void ATD45DB161DStream::flush() {
 
 void ATD45DB161DStream::flushOutput() {
   if (!bufferIsSync) {
-    Serial3.print("Flushing to page: "); Serial3.println(currentPage());
+//    Serial3.print("Flushing to page: "); Serial3.println(currentPage());
     BufferToPage(1, currentPage(), 1);
     bufferIsSync = true;
   }
