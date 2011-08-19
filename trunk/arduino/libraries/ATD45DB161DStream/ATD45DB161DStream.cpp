@@ -20,7 +20,7 @@
 #include "ATD45DB161DStream.h"
 
 ATD45DB161DStream::ATD45DB161DStream() :
-  curr(0), outputBufferEmpty(true)
+  curr(0), bufferPage(-1), bufferIsSync(false)
 {
 }
 
@@ -36,11 +36,13 @@ void ATD45DB161DStream::begin(uint8_t csPin, uint8_t resetPin, uint8_t wpPin) {
 }
 
 void ATD45DB161DStream::write(uint8_t x) {
-  // End of page check.
+  if (bufferPage != currentPage()) {
+    // Fill buffer with current data from the page in order to preserve it.
+    BufferRead(1, 0, 1); // TODO: why low speed (third arg) ?
+    bufferPage = currentPage();
+    bufferIsSync = true;
+  }
 
-  /* Set dataflash so that any call to spi_tranfer will write the byte
-   * given as argument to the Buffer 1 */
-  BufferWrite(1, currentOffset());
 //  // Switch check.
 //  else if (!writeMode) {
 //    // Because we have previously switched to read mode, we now need to re-read the buffer.
@@ -48,17 +50,20 @@ void ATD45DB161DStream::write(uint8_t x) {
 //    writeMode = true;
 //  }
 
+  /* Set dataflash so that any call to spi_tranfer will write the byte
+   * given as argument to the Buffer 1 */
+  BufferWrite(1, currentOffset());
+
   // Transfer data to buffer.
   SPI.transfer(x);
-  outputBufferEmpty = false;
 
+  // Output
+  bufferIsSync = false;
+
+  // End of page check.
   if (currentOffset() == ATD45DB161D_BYTES_PER_PAGE-1) {
     // Send buffer to dataflash.
     flushOutput();
-
-    // Fill buffer with current data from the page in order to preserve it.
-    // TODO: make sure we're doing this right
-    BufferRead(1, 0, 1); // TODO: why low speed (third arg) ?
   }
   curr++;
 }
@@ -86,10 +91,10 @@ void ATD45DB161DStream::flush() {
 }
 
 void ATD45DB161DStream::flushOutput() {
-  if (!outputBufferEmpty) {
+  if (!bufferIsSync) {
     Serial3.print("Flushing to page: "); Serial3.println(currentPage());
     BufferToPage(1, currentPage(), 1);
-    outputBufferEmpty = true;
+    bufferIsSync = true;
   }
 }
 
