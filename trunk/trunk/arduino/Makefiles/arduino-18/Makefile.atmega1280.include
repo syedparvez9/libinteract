@@ -1,0 +1,6 @@
+# Defaults for Arduino ATmega168
+#AVRDUDE_FUSES=-U lfuse:w:$(LFUSES):m -U hfuse:w:$(HFUSES):m -U efuse:w:$(EFUSES):m
+
+#F_CPU = 8000000
+
+#F_CPU = 16000000

@@ -1,0 +1,36 @@
+# Make sure this points to the right directory
+ifndef MAKEFILES_DIR
+MAKEFILES_DIR = /Users/tats/Documents/workspace/Makefiles
+endif
+
+# The name of the target Arduino file (ie. the file name less the .pde)
+TARGET = 
+
+# Arduino libraries used
+LIBRARIES = 
+CONTRIB_LIBRARIES = 
+
+# Additional source files
+CSRC = 
+CXXSRC = 
+
+# The default MCU (eg. atmega168)
+DEFAULT_MCU = 
+
+# The default CPU frequency
+DEFAULT_F_CPU = 16000000
+
+# Default avrdude values
+DEFAULT_UPLOAD_RATE = 19200
+DEFAULT_PORT = usb
+DEFAULT_PROGRAMMER = avrisp2
+
+# Arduino version
+VERSION = 18
+
+##### NOTE: YOU SHOULDN'T HAVE TO EDIT BELOW THIS LINE #####
+
+BUILD_DIR = $(shell pwd)
+
+include $(MAKEFILES_DIR)/Makefile.arduino-$(VERSION).common.include
+#include $(MAKEFILES_DIR)/Makefile.$(MCU).include
