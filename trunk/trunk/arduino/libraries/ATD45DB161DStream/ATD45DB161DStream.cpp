@@ -20,7 +20,7 @@
 #include "ATD45DB161DStream.h"
 
 ATD45DB161DStream::ATD45DB161DStream() :
-  curr(0), bufferPage(-1), bufferIsSync(false)
+  curr(0), bufferPage(-1), bufferIsSync(false), continuousArrayReadNeedsReset(true)
 {
 }
 
@@ -60,6 +60,9 @@ void ATD45DB161DStream::write(uint8_t x) {
   // Output
   bufferIsSync = false;
 
+  // Need reset (cause we're in BufferWrite mode now).
+  continuousArrayReadNeedsReset = true;
+
   // End of page check.
   if (currentOffset() == ATD45DB161D_BYTES_PER_PAGE-1) {
     // Send buffer to dataflash.
@@ -84,7 +87,11 @@ int ATD45DB161DStream::peek() {
   if (eof())
     return (-1);
   flushOutput();
-  ReadMainMemoryPage(currentPage(), currentOffset());
+  if (continuousArrayReadNeedsReset) {
+    ContinuousArrayRead(currentPage(), currentOffset(), 1); // low speed
+    continuousArrayReadNeedsReset = false;
+  }
+//  ReadMainMemoryPage(currentPage(), currentOffset());
   return SPI.transfer(0xff);
 }
 
@@ -96,6 +103,7 @@ void ATD45DB161DStream::flushOutput() {
   if (!bufferIsSync) {
 //    Serial3.print("Flushing to page: "); Serial3.println(currentPage());
     BufferToPage(1, currentPage(), 1);
+    continuousArrayReadNeedsReset = true;
     bufferIsSync = true;
   }
 }
@@ -107,6 +115,7 @@ unsigned long ATD45DB161DStream::tell() {
 void ATD45DB161DStream::seek(unsigned long pos/*, int dir = CUR*/) {
   flushOutput(); // Flush buffer.
   curr = min(pos, ATD45DB161D_SIZE); // cannot seek over max size
+  continuousArrayReadNeedsReset = true;
 }
 
 bool ATD45DB161DStream::eof() {

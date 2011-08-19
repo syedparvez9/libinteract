@@ -32,6 +32,7 @@ public:
   unsigned long curr;
   int bufferPage;  // Page of the current buffer.
   bool bufferIsSync; // true iff buffer is sync with data on chip.
+  bool continuousArrayReadNeedsReset;
 //  bool outputBufferEmpty;
 //  bool writeMode;
 
