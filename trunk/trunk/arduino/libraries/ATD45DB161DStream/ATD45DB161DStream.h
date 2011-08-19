@@ -30,8 +30,9 @@
 class ATD45DB161DStream : public ATD45DB161D, public SeekableStream {
 public:
   unsigned long curr;
-  unsigned long bufferPage;
-  bool outputBufferEmpty;
+  int bufferPage;  // Page of the current buffer.
+  bool bufferIsSync; // true iff buffer is sync with data on chip.
+//  bool outputBufferEmpty;
 //  bool writeMode;
 
   ATD45DB161DStream();
