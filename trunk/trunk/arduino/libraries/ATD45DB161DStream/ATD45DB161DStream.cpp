@@ -112,9 +112,16 @@ unsigned long ATD45DB161DStream::tell() {
   return curr;
 }
 
-void ATD45DB161DStream::seek(unsigned long pos/*, int dir = CUR*/) {
+void ATD45DB161DStream::seek(unsigned long pos, uint8_t origin) {
   flushOutput(); // Flush buffer.
-  curr = min(pos, ATD45DB161D_SIZE); // cannot seek over max size
+  if (origin == SEEK_SET)
+    curr = pos;
+  else if (origin == SEEK_CUR)
+    curr += pos;
+  else
+    curr = ATD45DB161D_SIZE - pos;
+
+  curr = constrain(curr, 0, ATD45DB161D_SIZE);
   continuousArrayReadNeedsReset = true;
 }
 
