@@ -54,7 +54,7 @@ public:
 
   // From SeekableStream.h
   virtual unsigned long tell();
-  virtual void seek(unsigned long pos/*, int dir = CUR*/);
+  virtual void seek(unsigned long pos, uint8_t origin = SEEK_SET);
   virtual bool eof();
 
   int currentPage() const;
