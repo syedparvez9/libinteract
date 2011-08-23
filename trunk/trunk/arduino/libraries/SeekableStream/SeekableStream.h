@@ -44,13 +44,15 @@ public:
 
   // NOTE: These methods should acually go in Stream.
 
+  virtual int read() = 0;
+
   // From: http://code.google.com/p/arduino/issues/detail?id=416
   virtual size_t read(uint8_t *buf, size_t size) {
     size_t av = available();
     if (size > av) size = av;
     if (size == 0) return 0;
     for (int i=0; i<size; i++)
-      *buf++ = read();
+      *buf++ = (uint8_t) read();
     return size;
   }
 
