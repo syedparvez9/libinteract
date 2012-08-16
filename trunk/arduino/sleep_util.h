@@ -22,7 +22,12 @@
 #ifndef SLEEP_UTIL_INC
 #define SLEEP_UTIL_INC
 
+#if ARDUINO >= 100
+#include "Arduino.h"
+#else
 #include "WProgram.h"
+#endif
+
 #include <avr/sleep.h>
 
 void sleepPowerDown(byte interrupt, void (*wakeUpFunction)(void) = 0) {

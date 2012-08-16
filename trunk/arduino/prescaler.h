@@ -24,7 +24,12 @@
 #ifndef PRESCALER_INC
 #define PRESCALER_INC
 
+#if ARDUINO >= 100
+#include "Arduino.h"
+#else
 #include "WProgram.h"
+#endif
+
 #include <avr/power.h>
 
 inline uint16_t getClockDivisionFactor() {

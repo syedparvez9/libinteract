@@ -21,7 +21,12 @@
 #ifndef WATCHDOG_SLEEP_UTIL_INC
 #define WATCHDOG_SLEEP_UTIL_INC
 
+#if ARDUINO >= 100
+#include "Arduino.h"
+#else
 #include "WProgram.h"
+#endif
+
 #include <avr/sleep.h>
 #include <avr/wdt.h>
 
