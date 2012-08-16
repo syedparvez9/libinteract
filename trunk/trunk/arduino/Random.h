@@ -29,7 +29,11 @@
 #include <limits.h>
 #include <stdlib.h>
 
+#if ARDUINO >= 100
+#include "Arduino.h"
+#else
 #include "WProgram.h"
+#endif
 
 class Random {
 

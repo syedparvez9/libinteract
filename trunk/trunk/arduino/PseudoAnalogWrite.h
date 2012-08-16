@@ -22,7 +22,11 @@
 #ifndef PSEUDO_ANALOG_INC
 #define PSEUDO_ANALOG_INC
 
+#if ARDUINO >= 100
+#include "Arduino.h"
+#else
 #include "WProgram.h"
+#endif
 
 /**
  * Simulates analogWrite(pin, value) for a given time in milliseconds.

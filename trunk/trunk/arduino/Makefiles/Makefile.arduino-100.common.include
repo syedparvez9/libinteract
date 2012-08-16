@@ -115,7 +115,7 @@ $(ARDUINO)/wiring_shift.c \
 # end of C_MODULES
 
 CXX_MODULES = \
-$(ARDUINO)/main.cpp \
+#$(ARDUINO)/main.cpp \
 $(ARDUINO)/WMath.cpp \
 $(ARDUINO)/Print.cpp \
 $(ARDUINO)/HardwareSerial.cpp

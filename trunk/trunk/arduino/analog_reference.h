@@ -28,7 +28,12 @@
 #ifndef ANALOG_REFERENCE_INC
 #define ANALOG_REFERENCE_INC
 
+#if ARDUINO >= 100
+#include "Arduino.h"
+#else
 #include "WProgram.h"
+#endif
+
 #include "prescaler.h"
 
 #define ANALOG_REFERENCE_DUMMY_PIN 0

@@ -22,7 +22,11 @@
 #ifndef GENERAL_INC
 #define GENERAL_INC
 
+#if ARDUINO >= 100
+#include "Arduino.h"
+#else
 #include "WProgram.h"
+#endif
 
 float map(float x, float in_min, float in_max, float out_min, float out_max)
 {
