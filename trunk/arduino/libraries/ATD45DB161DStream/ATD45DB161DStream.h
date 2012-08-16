@@ -28,14 +28,21 @@
 #define ATD45DB161D_SIZE           2162688L // = BYTES_PER_PAGE * N_PAGES
 
 class ATD45DB161DStream : public ATD45DB161D, public SeekableStream {
-public:
-  unsigned long curr;
-  int bufferPage;  // Page of the current buffer.
-  bool bufferIsSync; // true iff buffer is sync with data on chip.
-  bool continuousArrayReadNeedsReset;
-//  bool outputBufferEmpty;
-//  bool writeMode;
 
+public:
+  // The current address.
+  unsigned long curr;
+
+  // Page of the current buffer.
+  int bufferPage;
+
+  // True iff buffer is sync with data on chip.
+  bool bufferIsSync;
+
+  // True iff ContinuousArrayRead() needs to be re-called.
+  bool continuousArrayReadNeedsReset;
+
+  // Constructor.
   ATD45DB161DStream();
 
   void begin(uint8_t csPin=SLAVESELECT, uint8_t resetPin=RESET, uint8_t wpPin=WP);
@@ -50,9 +57,8 @@ public:
   virtual int peek();
   virtual void flush();
 
-  virtual void flushOutput();
-
   // From SeekableStream.h
+  virtual void flushOutput();
   virtual unsigned long tell();
   virtual void seek(unsigned long pos, uint8_t origin = SEEK_SET);
   virtual bool eof();
