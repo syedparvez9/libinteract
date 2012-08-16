@@ -124,9 +124,9 @@ def main(args):
   port = None
   bps = 9600
   try:
-    optlist, args = getopt.getopt(args[1:], 'hp:b:s:rn:d:',
+    optlist, args = getopt.getopt(args[1:], 'hp:b:s:rn:d:c',
                                   ['help', 'port=', 'baud=', 'send=', 'receive',
-                                   'num=', 'delay='])
+                                   'num=', 'delay=', 'continuous'])
     for (o, v) in optlist:
       if o == '-d' or o == '--delay':
         n = float(v) / 1000.0
@@ -144,6 +144,10 @@ def main(args):
         port.write(v)
       elif o == '-r' or o == '--receive':
         print "Read %s" % (port.read_until('\n'),)
+      elif o == '-c' or o == '--continuous':
+        while True:
+          print port.read_until('\n').rstrip('\n')
+          
     sys.exit(0)
   except getopt.GetoptError, e:
     sys.stderr.write("%s: %s\n" % (args[0], e.msg))
@@ -159,6 +163,7 @@ Options:
   -b, --baud=baudrate          Baudrate (bps) of Arduino
   -s, --send=data              Send data to Arduino
   -r, --receive                Receive data from Arduino & print it out
+  -c, --continuous             Receive data continuously
   -n  --num=num                Send a number as a single byte
   -d  --delay=millis           Delay for specified milliseconds
 
