@@ -1,4 +1,4 @@
-/*
+/**
  * SeekableStream.h
  *
  * This class adds seek/peek functionalities to Stream. It is useful for addressable
@@ -23,36 +23,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef SEEKABLESTREAM_H_
-#define SEEKABLESTREAM_H_
+#include "SeekableStream.h"
 
-#include "Stream.h"
-
-#ifndef SEEK_SET // from stdio.h
-#define SEEK_SET 0x0
-#define SEEK_CUR 0x1
-#define SEEK_END 0x2
-#endif
-
-class SeekableStream : public Stream
+size_t SeekableStream::read(uint8_t *buf, size_t size)
 {
-public:
-  virtual unsigned long tell() = 0;
-  virtual void seek(unsigned long pos, uint8_t origin = SEEK_SET) = 0;
-  virtual void rewind() { seek(0); }
-
-
-  // NOTE: These methods should acually go in Stream.
-
-  virtual int read() = 0;
-
-  // From: http://code.google.com/p/arduino/issues/detail?id=416
-  virtual size_t read(uint8_t *buf, size_t size);
-
-  virtual bool eof() = 0;
-  virtual void flushInput() { flush(); }
-  virtual void flushOutput() = 0;
-
-};
-
-#endif /* RANDOMACCESSSTREAM_H_ */
+  size_t av = available();
+  if (size > av) size = av;
+  if (size == 0) return 0;
+  for (int i=0; i<size; i++)
+    *buf++ = (uint8_t) read();
+  return size;
+}
