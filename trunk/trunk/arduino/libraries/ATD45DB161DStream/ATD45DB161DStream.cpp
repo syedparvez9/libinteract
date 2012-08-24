@@ -35,7 +35,11 @@ void ATD45DB161DStream::begin(uint8_t csPin, uint8_t resetPin, uint8_t wpPin) {
   ATD45DB161D::begin(csPin, resetPin, wpPin);
 }
 
+#if ARDUINO >= 100
+size_t ATD45DB161DStream::write(uint8_t x) {
+#else
 void ATD45DB161DStream::write(uint8_t x) {
+#endif
   if (bufferPage != currentPage()) {
     // Fill buffer with current data from the page in order to preserve it.
     BufferRead(1, 0, 1); // TODO: why low speed (third arg) ?
@@ -69,6 +73,10 @@ void ATD45DB161DStream::write(uint8_t x) {
     flushOutput();
   }
   curr++;
+
+#if ARDUINO >= 100
+  return 1;
+#endif
 }
 
 // From Stream.h
