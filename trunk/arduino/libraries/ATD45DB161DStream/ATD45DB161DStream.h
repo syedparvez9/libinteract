@@ -49,7 +49,11 @@ public:
 //  void end();
 
   // From Print.h
+#if ARDUINO >= 100
+  virtual size_t write(uint8_t x);
+#else
   virtual void write(uint8_t x);
+#endif
 
   // From Stream.h
   virtual int available();
