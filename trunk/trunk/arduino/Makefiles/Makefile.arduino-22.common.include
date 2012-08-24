@@ -34,7 +34,7 @@
 #
 # $Id$
 
-INSTALL_DIR = /Applications/Arduino-18.app/Contents/Resources/Java/
+INSTALL_DIR = /Applications/Arduino-22.app/Contents/Resources/Java/
 SKETCHBOOK_DIR = $(HOME)/Documents/Arduino/
 
 
