@@ -72,6 +72,13 @@ void loop() {
 }
   
 */
+
+#if ARDUINO >= 100
+#include "Arduino.h"
+#else
+#include "WProgram.h"
+#endif
+
 class TouchSensor {
   byte _sendPin;
   byte _receivePin;

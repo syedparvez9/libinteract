@@ -22,7 +22,12 @@
 #ifndef VOLTAGE_METER_INC
 #define VOLTAGE_METER_INC
 
+#if ARDUINO >= 100
+#include "Arduino.h"
+#else
 #include "WProgram.h"
+#endif
+
 #include "analog_reference.h"
 
 /*
