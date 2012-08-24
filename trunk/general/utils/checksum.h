@@ -29,7 +29,7 @@
  * Generates a checksum for a piece of data. An optional argument #initChecksum# can be specified
  * to provide a better scramble of the data.
  */
-unsigned char checksum(const unsigned char *data, size_t n, 
+inline unsigned char checksum(const unsigned char *data, size_t n,
                        unsigned char initChecksum = 0)
 {
   unsigned char cs = initChecksum;
@@ -41,7 +41,7 @@ unsigned char checksum(const unsigned char *data, size_t n,
 /**
  * Return true iff the received checksum corresponds to the expected one.
  */
-bool verifyChecksum(unsigned char expectedChecksum, 
+inline bool verifyChecksum(unsigned char expectedChecksum,
                     const unsigned char *data, size_t n, 
                     unsigned char initChecksum = 0)
 {
