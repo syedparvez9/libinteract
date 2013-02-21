@@ -82,22 +82,43 @@ void loop() {
 }
   
 */
+#if defined(__AVR_ATmega1280__) || defined(__AVR_ATmega2560__) || defined(__AVR_ATmega1284P__)
+#define VOLTAGE_METER_DEFAULT_ANALOG_REFERENCE INTERNAL1V1
+#else
+#define VOLTAGE_METER_DEFAULT_ANALOG_REFERENCE INTERNAL
+#endif
+
 class VoltageMeter {
   byte _pin;
+  byte _analogReference;
   float _vMax;
   
 public:
-  VoltageMeter(byte pin, float vMax)
-    : _pin(pin), _vMax(vMax) 
+  VoltageMeter(byte pin, float vMax, byte analogRef=VOLTAGE_METER_DEFAULT_ANALOG_REFERENCE)
+    : _pin(pin), _analogReference(analogRef), _vMax(vMax)
   {}
-  
+
+  VoltageMeter(byte pin, float rGndToPin, float rPinToVcc, byte analogRef=VOLTAGE_METER_DEFAULT_ANALOG_REFERENCE, float vRef=-1)
+    : _pin(pin), _analogReference(analogRef) {
+#if defined(__AVR_ATmega1280__) || defined(__AVR_ATmega2560__) || defined(__AVR_ATmega1284P__)
+    if (_analogReference == INTERNAL1V1)
+      vRef = 1.1f;
+    else if (_analogReference == INTERNAL2V56)
+      vRef = 2.56f;
+    else if (vRef < 0)
+      vRef = 5.5f; // default
+#else
+    if (_analogReference == INTERNAL)
+      vRef = 1.1f;
+    else if (vRef < 0)
+      vRef = 5.5f; // default
+#endif
+    _vMax = vRef * (rGndToPin + rPinToVcc) / rGndToPin;
+  }
+
   int analogReadVoltage(int nSamples = 1) const {
     byte currentReference = getAnalogReference();
-#if defined(__AVR_ATmega1280__)
-    setAnalogReference(INTERNAL1V1);
-#else
-    setAnalogReference(INTERNAL);
-#endif
+    setAnalogReference(_analogReference);
     float sum = 0;
     for (int i=0; i< nSamples; i++)
       sum += analogRead(_pin);
