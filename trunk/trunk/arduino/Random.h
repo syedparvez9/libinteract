@@ -45,8 +45,8 @@ public:
 
   /// Initializes the random number generator by using analogRead on an open pin.
   /// XXX not tested yet!
-  static void seed(byte pin) {
-    unsigned long seed = 0;
+  static void seed(byte pin, unsigned long offset=0) {
+    unsigned long seed = offset;
     for (int s=0; s<32; s+=10) {
       unsigned long val = 0;
       do {
