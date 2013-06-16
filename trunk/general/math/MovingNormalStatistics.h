@@ -42,22 +42,31 @@ class MovingNormalStatistics {
   float _alpha;
   
 public:
-  MovingNormalStatistics(float alpha = 0.001f, float initMean=551.0f, float initMean2=261121.0f) : _alpha(alpha) {
+  /**
+   * Constructs the moving average, starting with #startValue# as its value. The #alphaOrN# argument
+   * has two options:
+   * - if <= 1 then it's used directly as the alpha value
+   * - if > 1 then it's used as the "number of items that are considered from the past" (*)
+   * (*) Of course this is an approximation. It actually sets the alpha value to 2 / (n - 1)
+   */
+  MovingNormalStatistics(float alphaOrN, float initMean=551.0f, float initMean2=261121.0f) {
+    _alpha = (alphaOrN <= 1 ?
+                alphaOrN :
+                2 / (alphaOrN - 1));
     reset(initMean, initMean2);
   }
   
   // Resets the statistics.
   void reset(float initMean=0, float initMean2=0) {
-    _mean = initMean;
+    _mean  = initMean;
     _mean2 = initMean2;
   }
   
   // Adds a value to the statistics.
   void add(float value) {
     // Update mean and mean2
-    float oneMinusAlpha = 1-_alpha;
-    _mean = oneMinusAlpha*_mean + _alpha*value;
-    _mean2 = oneMinusAlpha*_mean2 + _alpha*value*value;
+    _mean  -= _alpha * (_mean - value);
+    _mean2 -= _alpha * (_mean2 - value*value);
   }
   
   // The statistics.
