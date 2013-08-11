@@ -21,7 +21,11 @@
 #ifndef FILE_EEPROM_INC
 #define FILE_EEPROM_INC
 
+#if ARDUINO >= 100
+#include "Arduino.h"
+#else
 #include "WProgram.h"
+#endif
 
 #ifndef EEPROM_SIZE
 #if defined(__AVR_ATmega8__) || defined(__AVR_ATmega168__)
