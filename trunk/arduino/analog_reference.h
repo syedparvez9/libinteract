@@ -42,7 +42,7 @@
  * Returns the actual value of analog reference (either DEFAULT, INTERNAL or EXTERNAL).
  * Calls analogRead() to set ADMUX.
  */
-uint8_t getAnalogReference() {
+static uint8_t getAnalogReference() {
   // Makes sure mode has been set in ADMUX by calling analogRead() on method's first call
   analogRead(ANALOG_REFERENCE_DUMMY_PIN);
   
@@ -53,7 +53,7 @@ uint8_t getAnalogReference() {
  * Replacement method for analogReference(). Makes sure the next call to analogRead() will
  * return the right value. Calls analogRead().
  */
-void setAnalogReference(byte mode) {
+static void setAnalogReference(byte mode) {
   analogReference(mode);                   // switch to new reference
   
   // XXX I don't know why but without these lines the switch from 
@@ -68,7 +68,7 @@ void setAnalogReference(byte mode) {
  * Optional argument #nSamples# allows to ask for an average value over many samples.
  * Optional argument #timeBetweenSamples# allows to set a delay (in milliseconds) between each reading.
  */
-int analogReadReference(byte pin, byte mode, int nSamples = 1, unsigned long timeBetweenSamples = 0) {
+static int analogReadReference(byte pin, byte mode, int nSamples = 1, unsigned long timeBetweenSamples = 0) {
 
   uint8_t currentReference = getAnalogReference(); // copy current reference
   setAnalogReference(mode);                        // safely switch to new reference
