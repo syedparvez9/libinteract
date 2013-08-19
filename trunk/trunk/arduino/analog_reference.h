@@ -54,12 +54,14 @@ static uint8_t getAnalogReference() {
  * return the right value. Calls analogRead().
  */
 static void setAnalogReference(byte mode) {
-  analogReference(mode);                   // switch to new reference
-  
-  // XXX I don't know why but without these lines the switch from 
-  // DEFAULT to INTERNAL does not work well.
-  analogRead(ANALOG_REFERENCE_DUMMY_PIN);
-  trueDelay(100); // wait for 100 ms
+  if (mode != getAnalogReference()) {
+    analogReference(mode);                   // switch to new reference
+
+    // XXX I don't know why but without these lines the switch from
+    // DEFAULT to INTERNAL does not work well.
+    analogRead(ANALOG_REFERENCE_DUMMY_PIN);
+    trueDelay(100); // wait for 100 ms
+  }
 }
 
 /**
