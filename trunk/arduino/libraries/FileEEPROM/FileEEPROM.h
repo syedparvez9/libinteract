@@ -35,7 +35,7 @@
 #elif defined(__AVR_ATmega1280__) || defined(__AVR_ATmega2560__)
 #define EEPROM_SIZE 4096
 #else
-#error "Unsupported processor (please define the EEPROM_SIZE for your specific architecture)
+#error "Unsupported processor (please define the EEPROM_SIZE for your specific architecture)"
 #endif
 #endif
 
