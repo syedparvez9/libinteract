@@ -40,9 +40,13 @@ class SuperTimer {
   bool _started;
 
 public:
-  SuperTimer(bool startNow = false, unsigned long offset = 0) : _startTime(0), _offset(0), _started(false) {
+  SuperTimer(bool startNow = false) : _startTime(0), _offset(0), _started(false) {
     if (startNow)
-      start(offset);
+      start();
+  }
+
+  SuperTimer(unsigned long offset) : _startTime(0), _offset(0), _started(false) {
+    start(offset);
   }
   
   void start(unsigned long offset = 0) {
