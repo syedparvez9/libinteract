@@ -44,10 +44,6 @@ public:
     if (startNow)
       start();
   }
-
-  SuperTimer(unsigned long offset) : _startTime(0), _offset(0), _started(false) {
-    start(offset);
-  }
   
   void start(unsigned long offset = 0) {
     _startTime = millis();
